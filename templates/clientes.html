@@ -1,0 +1,33 @@
+<!-- templates/clientes.html -->
+{% extends "base.html" %}
+
+{% block title %}Gestión de Clientes{% endblock %}
+
+{% block content %}
+<h1>Clientes Registrados</h1>
+<table border="1">
+    <tr>
+        <th>Nombre</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+    </tr>
+    {% for cliente in clientes %}
+    <tr>
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.correo }}</td>
+        <td>{{ cliente.telefono }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Registrar Nuevo Cliente</h2>
+<form action="/agregar_cliente" method="POST">
+    <label>Nombre:</label>
+    <input type="text" name="nombre" required>
+    <label>Correo:</label>
+    <input type="email" name="correo" required>
+    <label>Teléfono:</label>
+    <input type="text" name="telefono" required>
+    <button type="submit">Registrar Cliente</button>
+</form>
+{% endblock %}

@@ -1,0 +1,47 @@
+<!-- templates/mascotas.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Mascotas</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
+</head>
+<body>
+    <h1>Lista de Mascotas</h1>
+    <table border="1">
+        <tr>
+            <th>Nombre</th>
+            <th>Especie</th>
+            <th>Edad</th>
+            <th>Dueño</th>
+        </tr>
+        {% for mascota in mascotas %}
+        <tr>
+            <td>{{ mascota.nombre }}</td>
+            <td>{{ mascota.especie }}</td>
+            <td>{{ mascota.edad }}</td>
+            <td>{{ mascota.dueño.nombre }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Registrar Nueva Mascota</h2>
+    <form action="/agregar_mascota" method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+        <label>Especie:</label>
+        <input type="text" name="especie" required>
+        <label>Edad:</label>
+        <input type="number" name="edad" required>
+        <label>Dueño:</label>
+        <select name="dueño_id">
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Registrar Mascota</button>
+    </form>
+</body>
+</html>
