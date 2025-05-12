@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, send_from_directory
+from flask import Flask, render_template, send_from_directory, redirect, url_for
 from models.models import db
 from routes.routes import configurar_rutas  # Importar las rutas
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -18,7 +18,9 @@ configurar_rutas(app)  # Aquí conectamos las rutas con la aplicación
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))  # Redirige al login si no está autenticado
+    return render_template('index.html')  # Muestra el index si está autenticado
 
 
 @app.errorhandler(404)

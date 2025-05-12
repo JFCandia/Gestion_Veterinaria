@@ -39,8 +39,28 @@ header nav ul li a:hover {
 
 /* Menú principal en index.html */
 .menu {
-    margin: 2rem auto;
-    text-align: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    background-color: #4CAF50;
+}
+
+.menu li {
+    margin: 0;
+    padding: 0;
+}
+
+.menu li a {
+    display: block;
+    padding: 1rem 1.5rem;
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.menu li a:hover {
+    background-color: #45a049;
 }
 
 .menu-grid {
@@ -128,4 +148,73 @@ form button {
 
 form button:hover {
     background-color: #45a049;
+}
+
+.pagination {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pagination a {
+    text-decoration: none;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.pagination a:hover {
+    text-decoration: underline;
+}
+
+.pagination span {
+    font-weight: bold;
+    color: #333;
+}
+
+/* Contenedor principal */
+.gestion-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Elementos individuales */
+.gestion-item {
+    background-color: #4CAF50;
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Enlaces dentro de los elementos */
+.gestion-item a {
+    text-decoration: none;
+    color: white;
+}
+
+/* Títulos */
+.gestion-item h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Descripciones */
+.gestion-item p {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+}
+
+/* Efecto hover */
+.gestion-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
 }

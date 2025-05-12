@@ -8,30 +8,52 @@
     <title>Gestión de Citas</title>
 </head>
 <body>
-    <h1>Agenda de Citas</h1>
-    <table border="1">
-        <tr>
-            <th>Fecha</th>
-            <th>Motivo</th>
-            <th>Mascota</th>
-        </tr>
-        {% for cita in citas %}
-        <tr>
-            <td>{{ cita.fecha }}</td>
-            <td>{{ cita.motivo }}</td>
-            <td>{{ cita.mascota.nombre }}</td>
-        </tr>
-        {% endfor %}
+    <h1>Citas Registradas</h1>
+
+    <!-- Formulario de búsqueda -->
+    <form method="GET" action="{{ url_for('listar_citas') }}">
+        <input type="text" name="search" placeholder="Buscar cita..." value="{{ search }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Motivo</th>
+                <th>Mascota</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cita in citas.items %}
+            <tr>
+                <td>{{ cita.fecha }}</td>
+                <td>{{ cita.motivo }}</td>
+                <td>{{ cita.mascota.nombre }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
-    <h2>Programar Nueva Cita</h2>
+    <!-- Controles de paginación -->
+    <div class="pagination">
+        {% if citas.has_prev %}
+            <a href="{{ url_for('listar_citas', page=citas.prev_num, search=search) }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ citas.page }} de {{ citas.pages }}</span>
+        {% if citas.has_next %}
+            <a href="{{ url_for('listar_citas', page=citas.next_num, search=search) }}">Siguiente</a>
+        {% endif %}
+    </div>
+
+    <h2>Registrar Nueva Cita</h2>
     <form action="/agregar_cita" method="POST">
-        <label>Fecha:</label>
-        <input type="date" name="fecha" required>
-        <label>Motivo:</label>
-        <input type="text" name="motivo" required>
-        <label>Mascota:</label>
-        <select name="mascota_id">
+        <label for="fecha">Fecha:</label>
+        <input type="date" name="fecha" id="fecha" required>
+        <label for="motivo">Motivo:</label>
+        <input type="text" name="motivo" id="motivo" required>
+        <label for="mascota_id">Mascota:</label>
+        <select name="mascota_id" id="mascota_id" required>
             {% for mascota in mascotas %}
             <option value="{{ mascota.id }}">{{ mascota.nombre }}</option>
             {% endfor %}

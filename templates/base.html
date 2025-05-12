@@ -9,12 +9,18 @@
 <body>
     <header>
         <nav>
-            <ul>
-                <li><a href="/">Inicio</a></li>
-                <li><a href="/clientes">Clientes</a></li>
-                <li><a href="/mascotas">Mascotas</a></li>
-                <li><a href="/citas">Citas</a></li>
-                <li><a href="/inventario">Inventario</a></li>
+            <ul class="menu">
+                <li><a href="{{ url_for('home') }}">Inicio</a></li>
+                {% if current_user.is_authenticated %}
+                    <li><a href="{{ url_for('listar_clientes') }}">Clientes</a></li>
+                    <li><a href="{{ url_for('listar_mascotas') }}">Mascotas</a></li>
+                    <li><a href="{{ url_for('listar_citas') }}">Citas</a></li>
+                    <li><a href="{{ url_for('listar_inventario') }}">Inventario</a></li>
+                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
+                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

@@ -16,12 +16,25 @@ def configurar_rutas(app):
 
         return redirect(url_for('listar_clientes'))
 
-    # Ruta para listar clientes
     @app.route('/clientes')
     @login_required
     def listar_clientes():
-        clientes = Cliente.query.all()
-        return render_template('clientes.html', clientes=clientes)
+        # Obtener el término de búsqueda desde los parámetros de la URL
+        search = request.args.get('search', '', type=str)
+        page = request.args.get('page', 1, type=int)
+
+        # Filtrar clientes si hay un término de búsqueda
+        if search:
+            clientes = Cliente.query.filter(
+                Cliente.nombre.ilike(f'%{search}%') |
+                Cliente.correo.ilike(f'%{search}%') |
+                Cliente.telefono.ilike(f'%{search}%')
+            ).paginate(page=page, per_page=5)
+        else:
+            # Mostrar todos los clientes si no hay búsqueda
+            clientes = Cliente.query.paginate(page=page, per_page=5)
+
+        return render_template('clientes.html', clientes=clientes, search=search)
 
     # Ruta para agregar mascota
     @app.route('/agregar_mascota', methods=['POST'])
@@ -39,10 +52,21 @@ def configurar_rutas(app):
 
     # Ruta para listar mascotas
     @app.route('/mascotas')
+    @login_required
     def listar_mascotas():
-        mascotas = Mascota.query.all()
-        clientes = Cliente.query.all()
-        return render_template('mascotas.html', mascotas=mascotas, clientes=clientes)
+        search = request.args.get('search', '', type=str)
+        page = request.args.get('page', 1, type=int)
+
+        if search:
+            mascotas = Mascota.query.filter(
+                Mascota.nombre.ilike(f'%{search}%') |
+                Mascota.especie.ilike(f'%{search}%')
+            ).paginate(page=page, per_page=5)
+        else:
+            mascotas = Mascota.query.paginate(page=page, per_page=5)
+
+        clientes = Cliente.query.all()  # Para el formulario de agregar mascota
+        return render_template('mascotas.html', mascotas=mascotas, clientes=clientes, search=search)
 
     # Ruta para agregar cita
     @app.route('/agregar_cita', methods=['POST'])
@@ -59,16 +83,36 @@ def configurar_rutas(app):
 
     # Ruta para listar citas
     @app.route('/citas')
+    @login_required
     def listar_citas():
-        citas = Cita.query.all()
-        mascotas = Mascota.query.all()
-        return render_template('citas.html', citas=citas, mascotas=mascotas)
+        search = request.args.get('search', '', type=str)
+        page = request.args.get('page', 1, type=int)
+
+        if search:
+            citas = Cita.query.filter(
+                Cita.motivo.ilike(f'%{search}%')
+            ).paginate(page=page, per_page=5)
+        else:
+            citas = Cita.query.paginate(page=page, per_page=5)
+
+        mascotas = Mascota.query.all()  # Para el formulario de agregar cita
+        return render_template('citas.html', citas=citas, mascotas=mascotas, search=search)
 
     # Agregar rutas para el inventario
     @app.route('/inventario')
+    @login_required
     def listar_inventario():
-        productos = Producto.query.all()
-        return render_template('inventario.html', productos=productos)
+        search = request.args.get('search', '', type=str)
+        page = request.args.get('page', 1, type=int)
+
+        if search:
+            productos = Producto.query.filter(
+                Producto.nombre.ilike(f'%{search}%')
+            ).paginate(page=page, per_page=5)
+        else:
+            productos = Producto.query.paginate(page=page, per_page=5)
+
+        return render_template('inventario.html', productos=productos, search=search)
 
     @app.route('/agregar_producto', methods=['POST'])
     def agregar_producto():
@@ -115,7 +159,8 @@ def configurar_rutas(app):
             if usuario and usuario.check_password(password):
                 login_user(usuario)
                 flash('Inicio de sesión exitoso.')
-                return redirect(url_for('home'))
+                next_page = request.args.get('next')  # Redirige a la página solicitada o al index
+                return redirect(next_page or url_for('home'))
             else:
                 flash('Correo o contraseña incorrectos.')
 

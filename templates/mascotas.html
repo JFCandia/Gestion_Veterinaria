@@ -9,34 +9,56 @@
 
 </head>
 <body>
-    <h1>Lista de Mascotas</h1>
-    <table border="1">
-        <tr>
-            <th>Nombre</th>
-            <th>Especie</th>
-            <th>Edad</th>
-            <th>Dueño</th>
-        </tr>
-        {% for mascota in mascotas %}
-        <tr>
-            <td>{{ mascota.nombre }}</td>
-            <td>{{ mascota.especie }}</td>
-            <td>{{ mascota.edad }}</td>
-            <td>{{ mascota.dueño.nombre }}</td>
-        </tr>
-        {% endfor %}
+    <h1>Mascotas Registradas</h1>
+
+    <!-- Formulario de búsqueda -->
+    <form method="GET" action="{{ url_for('listar_mascotas') }}">
+        <input type="text" name="search" placeholder="Buscar mascota..." value="{{ search }}">
+        <button type="submit">Buscar</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Especie</th>
+                <th>Edad</th>
+                <th>Dueño</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mascota in mascotas.items %}
+            <tr>
+                <td>{{ mascota.nombre }}</td>
+                <td>{{ mascota.especie }}</td>
+                <td>{{ mascota.edad }}</td>
+                <td>{{ mascota.dueño.nombre }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
+    <!-- Controles de paginación -->
+    <div class="pagination">
+        {% if mascotas.has_prev %}
+            <a href="{{ url_for('listar_mascotas', page=mascotas.prev_num, search=search) }}">Anterior</a>
+        {% endif %}
+        <span>Página {{ mascotas.page }} de {{ mascotas.pages }}</span>
+        {% if mascotas.has_next %}
+            <a href="{{ url_for('listar_mascotas', page=mascotas.next_num, search=search) }}">Siguiente</a>
+        {% endif %}
+    </div>
 
     <h2>Registrar Nueva Mascota</h2>
     <form action="/agregar_mascota" method="POST">
-        <label>Nombre:</label>
-        <input type="text" name="nombre" required>
-        <label>Especie:</label>
-        <input type="text" name="especie" required>
-        <label>Edad:</label>
-        <input type="number" name="edad" required>
-        <label>Dueño:</label>
-        <select name="dueño_id">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" id="nombre" required>
+        <label for="especie">Especie:</label>
+        <input type="text" name="especie" id="especie" required>
+        <label for="edad">Edad:</label>
+        <input type="number" name="edad" id="edad" required>
+        <label for="dueño_id">Dueño:</label>
+        <select name="dueño_id" id="dueño_id" required>
             {% for cliente in clientes %}
             <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
             {% endfor %}
