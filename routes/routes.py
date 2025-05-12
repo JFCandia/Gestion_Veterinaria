@@ -1,5 +1,6 @@
-from flask import request, redirect, url_for, render_template
-from models.models import db, Cliente, Mascota, Cita, Producto
+from flask import request, redirect, url_for, render_template, flash
+from flask_login import login_user, logout_user, login_required
+from models.models import db, Cliente, Mascota, Cita, Producto, Usuario
 
 def configurar_rutas(app):
     # Ruta para agregar cliente
@@ -17,6 +18,7 @@ def configurar_rutas(app):
 
     # Ruta para listar clientes
     @app.route('/clientes')
+    @login_required
     def listar_clientes():
         clientes = Cliente.query.all()
         return render_template('clientes.html', clientes=clientes)
@@ -79,3 +81,50 @@ def configurar_rutas(app):
         db.session.commit()
 
         return redirect(url_for('listar_inventario'))
+
+    # Ruta para registrar usuarios
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+        if request.method == 'POST':
+            username = request.form['username']
+            email = request.form['email']
+            password = request.form['password']
+
+            # Verificar si el usuario ya existe
+            if Usuario.query.filter_by(email=email).first():
+                flash('El correo ya está registrado.')
+                return redirect(url_for('register'))
+
+            nuevo_usuario = Usuario(username=username, email=email)
+            nuevo_usuario.set_password(password)
+            db.session.add(nuevo_usuario)
+            db.session.commit()
+            flash('Usuario registrado con éxito. Ahora puedes iniciar sesión.')
+            return redirect(url_for('login'))
+
+        return render_template('register.html')
+
+    # Ruta para iniciar sesión
+    @app.route('/login', methods=['GET', 'POST'])
+    def login():
+        if request.method == 'POST':
+            email = request.form['email']
+            password = request.form['password']
+            usuario = Usuario.query.filter_by(email=email).first()
+
+            if usuario and usuario.check_password(password):
+                login_user(usuario)
+                flash('Inicio de sesión exitoso.')
+                return redirect(url_for('home'))
+            else:
+                flash('Correo o contraseña incorrectos.')
+
+        return render_template('login.html')
+
+    # Ruta para cerrar sesión
+    @app.route('/logout')
+    @login_required
+    def logout():
+        logout_user()
+        flash('Has cerrado sesión.')
+        return redirect(url_for('login'))
