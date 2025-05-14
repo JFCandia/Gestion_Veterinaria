@@ -1,23 +1,19 @@
 <!-- templates/mascotas.html -->
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Gestión de Mascotas</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+{% extends "base.html" %}
 
-</head>
-<body>
-    <h1>Mascotas Registradas</h1>
+{% block title %}Gestión de Mascotas{% endblock %}
 
-    <!-- Formulario de búsqueda -->
-    <form method="GET" action="{{ url_for('listar_mascotas') }}">
-        <input type="text" name="search" placeholder="Buscar mascota..." value="{{ search }}">
-        <button type="submit">Buscar</button>
-    </form>
-
-    <table>
+{% block content %}
+<div class="container">
+    <h1>Mascotas</h1>
+    
+    <!-- Campo de búsqueda con botón -->
+    <div class="search-container">
+        <input type="text" id="mascotasSearch" placeholder="Buscar en mascotas..." class="search-bar">
+       <!----<button type="button" class="btn-search" id="searchButtonMascotas">Buscar</button>-->
+    </div>
+    
+    <table class="styled-table" id="mascotasTable">
         <thead>
             <tr>
                 <th>Nombre</th>
@@ -27,7 +23,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for mascota in mascotas.items %}
+            {% for mascota in mascotas %}
             <tr>
                 <td>{{ mascota.nombre }}</td>
                 <td>{{ mascota.especie }}</td>
@@ -38,32 +34,25 @@
         </tbody>
     </table>
 
-    <!-- Controles de paginación -->
-    <div class="pagination">
-        {% if mascotas.has_prev %}
-            <a href="{{ url_for('listar_mascotas', page=mascotas.prev_num, search=search) }}">Anterior</a>
-        {% endif %}
-        <span>Página {{ mascotas.page }} de {{ mascotas.pages }}</span>
-        {% if mascotas.has_next %}
-            <a href="{{ url_for('listar_mascotas', page=mascotas.next_num, search=search) }}">Siguiente</a>
-        {% endif %}
-    </div>
-
     <h2>Registrar Nueva Mascota</h2>
-    <form action="/agregar_mascota" method="POST">
+    <form action="/agregar_mascota" method="POST" class="form-container">
         <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" id="nombre" required>
+        <input type="text" id="nombre" name="nombre" required>
+        
         <label for="especie">Especie:</label>
-        <input type="text" name="especie" id="especie" required>
+        <input type="text" id="especie" name="especie" required>
+        
         <label for="edad">Edad:</label>
-        <input type="number" name="edad" id="edad" required>
+        <input type="number" id="edad" name="edad" required>
+        
         <label for="dueño_id">Dueño:</label>
-        <select name="dueño_id" id="dueño_id" required>
+        <select id="dueño_id" name="dueño_id" required>
             {% for cliente in clientes %}
             <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
             {% endfor %}
         </select>
-        <button type="submit">Registrar Mascota</button>
+        
+        <button type="submit" class="btn-submit">Registrar Mascota</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

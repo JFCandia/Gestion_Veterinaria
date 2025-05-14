@@ -5,32 +5,30 @@
 
 {% block content %}
 <h1>Bienvenido al Sistema de Gestión Veterinaria</h1>
-<p>Aquí podrás administrar clientes, mascotas, citas y el inventario.</p>
 
-<div class="gestion-container">
-    <div class="gestion-item">
-        <a href="/clientes">
+<nav class="menu">
+    <div class="menu-grid">
+        <a href="/clientes" class="menu-item">
             <h3>Gestión de Clientes</h3>
             <p>Administra la información de tus clientes.</p>
         </a>
-    </div>
-    <div class="gestion-item">
-        <a href="/mascotas">
+        <a href="/mascotas" class="menu-item">
             <h3>Gestión de Mascotas</h3>
             <p>Registra y consulta las mascotas de los clientes.</p>
         </a>
-    </div>
-    <div class="gestion-item">
-        <a href="/citas">
+        <a href="/citas" class="menu-item">
             <h3>Gestión de Citas</h3>
             <p>Organiza y programa las citas veterinarias.</p>
         </a>
-    </div>
-    <div class="gestion-item">
-        <a href="/inventario">
+        <a href="/inventario" class="menu-item">
             <h3>Gestión de Inventario</h3>
             <p>Controla los productos y medicamentos disponibles.</p>
         </a>
+        <a href="/ventas" class="menu-item">
+            <h3>Gestión de Ventas</h3>
+            <p>Registra y consulta las ventas realizadas.</p>
+        </a>
     </div>
-</div>
+</nav>
+
 {% endblock %}

@@ -1,29 +1,27 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="/static/styles.css">
-    <title>Gestión de Inventario</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Gestión de Inventario{% endblock %}
+
+{% block content %}
+<div class="container">
     <h1>Inventario</h1>
-
-    <!-- Formulario de búsqueda -->
-    <form method="GET" action="{{ url_for('listar_inventario') }}">
-        <input type="text" name="search" placeholder="Buscar producto..." value="{{ search }}">
-        <button type="submit">Buscar</button>
-    </form>
-
-    <table>
+    
+    <!-- Campo de búsqueda con botón -->
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar en inventario..." class="search-bar">
+        <!--<button type="button" class="btn-search" id="searchButtonInventario">Buscar</button>-->
+    </div>
+    
+    <table class="styled-table" id="dataTable">
         <thead>
             <tr>
-                <th>Nombre</th>
+                <th>Producto</th>
                 <th>Cantidad</th>
                 <th>Precio</th>
             </tr>
         </thead>
         <tbody>
-            {% for producto in productos.items %}
+            {% for producto in productos %}
             <tr>
                 <td>{{ producto.nombre }}</td>
                 <td>{{ producto.cantidad }}</td>
@@ -33,26 +31,18 @@
         </tbody>
     </table>
 
-    <!-- Controles de paginación -->
-    <div class="pagination">
-        {% if productos.has_prev %}
-            <a href="{{ url_for('listar_inventario', page=productos.prev_num, search=search) }}">Anterior</a>
-        {% endif %}
-        <span>Página {{ productos.page }} de {{ productos.pages }}</span>
-        {% if productos.has_next %}
-            <a href="{{ url_for('listar_inventario', page=productos.next_num, search=search) }}">Siguiente</a>
-        {% endif %}
-    </div>
-
-    <h2>Agregar Producto</h2>
-    <form action="/agregar_producto" method="POST">
-        <label for="nombre">Nombre:</label>
-        <input type="text" name="nombre" id="nombre" required>
+    <h2>Registrar Nuevo Producto</h2>
+    <form action="/agregar_producto" method="POST" class="form-container">
+        <label for="nombre">Producto:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        
         <label for="cantidad">Cantidad:</label>
-        <input type="number" name="cantidad" id="cantidad" required>
+        <input type="number" id="cantidad" name="cantidad" required>
+        
         <label for="precio">Precio:</label>
-        <input type="number" step="0.01" name="precio" id="precio" required>
-        <button type="submit">Agregar Producto</button>
+        <input type="number" step="0.01" id="precio" name="precio" required>
+        
+        <button type="submit" class="btn-submit">Registrar Producto</button>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}

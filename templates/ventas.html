@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Ventas{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Gestión de Ventas</h1>
+   
+    
+    <!-- Tabla para mostrar las ventas -->
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>ID Venta</th>
+                <th>Cliente</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <td>Precio</td>
+                <td>Total</td>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se iterarán las ventas -->
+            {% for venta in ventas %}
+            <tr>
+                <td>{{ venta.id }}</td>
+                <td>{{ venta.cliente }}</td>
+                <td>{{ venta.producto }}</td>
+                <td>{{ venta.cantidad }}</td>
+                <td>{{ venta.precio | default(0) | round(0) }}</td> <!-- Redondear el precio o mostrar 0 si es None -->
+                <td>{{ venta.total | default(0) | round(0) }}</td> <!-- Redondear el total o mostrar 0 si es None -->
+                <td>{{ venta.fecha }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Formulario para registrar una nueva venta -->
+    <h2>Registrar Nueva Venta</h2>
+    <form action="/agregar_venta" method="POST" class="form-container">
+        <label for="cliente">Cliente:</label>
+        <select id="cliente" name="cliente" required>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.id }}">{{ cliente.nombre }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="producto">Producto:</label>
+        <select id="producto" name="producto" required>
+            {% for producto in productos %}
+            <option value="{{ producto.id }}">{{ producto.nombre }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required>
+        
+        <button type="submit" class="btn-submit">Registrar Venta</button>
+    </form>
+</div>
+{% endblock %}

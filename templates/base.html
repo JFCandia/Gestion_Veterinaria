@@ -2,30 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Veterinaria{% endblock %}</title>
-    <link rel="stylesheet" href="/static/styles.css">
-  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestión Veterinaria{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
+    {% if request.path != '/' %}
     <header>
         <nav>
-            <ul class="menu">
-                <li><a href="{{ url_for('home') }}">Inicio</a></li>
-                {% if current_user.is_authenticated %}
-                    <li><a href="{{ url_for('listar_clientes') }}">Clientes</a></li>
-                    <li><a href="{{ url_for('listar_mascotas') }}">Mascotas</a></li>
-                    <li><a href="{{ url_for('listar_citas') }}">Citas</a></li>
-                    <li><a href="{{ url_for('listar_inventario') }}">Inventario</a></li>
-                    <li><a href="{{ url_for('logout') }}">Cerrar sesión</a></li>
-                {% else %}
-                    <li><a href="{{ url_for('login') }}">Iniciar sesión</a></li>
-                    <li><a href="{{ url_for('register') }}">Registrarse</a></li>
-                {% endif %}
+            <ul>
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Inicio</a></li>
+                <li><a href="/clientes" class="{% if request.path == '/clientes' %}active{% endif %}">Clientes</a></li>
+                <li><a href="/mascotas" class="{% if request.path == '/mascotas' %}active{% endif %}">Mascotas</a></li>
+                <li><a href="/citas" class="{% if request.path == '/citas' %}active{% endif %}">Citas</a></li>
+                <li><a href="/inventario" class="{% if request.path == '/inventario' %}active{% endif %}">Inventario</a></li>
+                <li><a href="/ventas" class="{% if request.path == '/ventas' %}active{% endif %}">Ventas</a></li>
+                <li><a href="/productos" class="{% if request.path == '/productos' %}active{% endif %}">Productos</a></li>
             </ul>
         </nav>
     </header>
+    {% endif %}
     <main>
         {% block content %}{% endblock %}
     </main>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>

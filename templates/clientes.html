@@ -1,55 +1,48 @@
-<!-- templates/clientes.html -->
 {% extends "base.html" %}
 
 {% block title %}Gestión de Clientes{% endblock %}
 
 {% block content %}
-<h1>Clientes Registrados</h1>
+<div class="container">
+    <h1>Clientes</h1>
+    
+    <!-- Campo de búsqueda con botón -->
+    <div class="search-container">
+        <input type="text" id="clientesSearch" placeholder="Buscar en clientes..." class="search-bar">
+        <!--<button type="button" class="btn-search" id="searchButtonClientes">Buscar</button>-->
+    </div>
+    
+    <table class="styled-table" id="clientesTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{ cliente.nombre }}</td>
+                <td>{{ cliente.correo }}</td>
+                <td>{{ cliente.telefono }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
-<!-- Formulario de búsqueda -->
-<form method="GET" action="{{ url_for('listar_clientes') }}">
-    <input type="text" name="search" placeholder="Buscar cliente..." value="{{ search }}">
-    <button type="submit">Buscar</button>
-</form>
-
-<table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cliente in clientes.items %}
-        <tr>
-            <td>{{ cliente.nombre }}</td>
-            <td>{{ cliente.correo }}</td>
-            <td>{{ cliente.telefono }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- Controles de paginación -->
-<div class="pagination">
-    {% if clientes.has_prev %}
-        <a href="{{ url_for('listar_clientes', page=clientes.prev_num, search=search) }}">Anterior</a>
-    {% endif %}
-    <span>Página {{ clientes.page }} de {{ clientes.pages }}</span>
-    {% if clientes.has_next %}
-        <a href="{{ url_for('listar_clientes', page=clientes.next_num, search=search) }}">Siguiente</a>
-    {% endif %}
+    <h2>Registrar Nuevo Cliente</h2>
+    <form action="/agregar_cliente" method="POST" class="form-container">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        
+        <label for="correo">Correo:</label>
+        <input type="email" id="correo" name="correo" required>
+        
+        <label for="telefono">Teléfono:</label>
+        <input type="text" id="telefono" name="telefono" required>
+        
+        <button type="submit" class="btn-submit">Agregar Cliente</button>
+    </form>
 </div>
-
-<h2>Registrar Nuevo Cliente</h2>
-<form action="/agregar_cliente" method="POST">
-    <label for="nombre">Nombre:</label>
-    <input type="text" name="nombre" id="nombre" required>
-    <label for="correo">Correo:</label>
-    <input type="email" name="correo" id="correo" required>
-    <label for="telefono">Teléfono:</label>
-    <input type="text" name="telefono" id="telefono" required>
-    <button type="submit">Registrar Cliente</button>
-</form>
 {% endblock %}

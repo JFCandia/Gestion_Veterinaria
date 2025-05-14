@@ -1,10 +1,14 @@
 from flask import request, redirect, url_for, render_template, flash
-from flask_login import login_user, logout_user, login_required
-from models.models import db, Cliente, Mascota, Cita, Producto, Usuario
+from flask_login import login_user, logout_user, login_required, current_user
+from models.models import db, Cliente, Mascota, Cita, Producto, Usuario, Venta
+from datetime import datetime
 
 def configurar_rutas(app):
-    # Ruta para agregar cliente
+    # -------------------------------
+    # Rutas para Clientes
+    # -------------------------------
     @app.route('/agregar_cliente', methods=['POST'])
+    @login_required
     def agregar_cliente():
         nombre = request.form['nombre']
         correo = request.form['correo']
@@ -19,25 +23,14 @@ def configurar_rutas(app):
     @app.route('/clientes')
     @login_required
     def listar_clientes():
-        # Obtener el término de búsqueda desde los parámetros de la URL
-        search = request.args.get('search', '', type=str)
-        page = request.args.get('page', 1, type=int)
+        clientes = Cliente.query.all()
+        return render_template('clientes.html', clientes=clientes)
 
-        # Filtrar clientes si hay un término de búsqueda
-        if search:
-            clientes = Cliente.query.filter(
-                Cliente.nombre.ilike(f'%{search}%') |
-                Cliente.correo.ilike(f'%{search}%') |
-                Cliente.telefono.ilike(f'%{search}%')
-            ).paginate(page=page, per_page=5)
-        else:
-            # Mostrar todos los clientes si no hay búsqueda
-            clientes = Cliente.query.paginate(page=page, per_page=5)
-
-        return render_template('clientes.html', clientes=clientes, search=search)
-
-    # Ruta para agregar mascota
+    # -------------------------------
+    # Rutas para Mascotas
+    # -------------------------------
     @app.route('/agregar_mascota', methods=['POST'])
+    @login_required
     def agregar_mascota():
         nombre = request.form['nombre']
         especie = request.form['especie']
@@ -50,71 +43,48 @@ def configurar_rutas(app):
 
         return redirect(url_for('listar_mascotas'))
 
-    # Ruta para listar mascotas
     @app.route('/mascotas')
     @login_required
     def listar_mascotas():
-        search = request.args.get('search', '', type=str)
-        page = request.args.get('page', 1, type=int)
+        mascotas = Mascota.query.all()
+        clientes = Cliente.query.all()
+        return render_template('mascotas.html', mascotas=mascotas, clientes=clientes)
 
-        if search:
-            mascotas = Mascota.query.filter(
-                Mascota.nombre.ilike(f'%{search}%') |
-                Mascota.especie.ilike(f'%{search}%')
-            ).paginate(page=page, per_page=5)
-        else:
-            mascotas = Mascota.query.paginate(page=page, per_page=5)
-
-        clientes = Cliente.query.all()  # Para el formulario de agregar mascota
-        return render_template('mascotas.html', mascotas=mascotas, clientes=clientes, search=search)
-
-    # Ruta para agregar cita
+    # -------------------------------
+    # Rutas para Citas
+    # -------------------------------
     @app.route('/agregar_cita', methods=['POST'])
+    @login_required
     def agregar_cita():
-        fecha = request.form['fecha']
+        fecha_str = request.form['fecha']  # Obtiene la fecha como cadena
+        fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date()  # Convierte a objeto date
         motivo = request.form['motivo']
         mascota_id = request.form['mascota_id']
 
-        nueva_cita = Cita(fecha=fecha, motivo=motivo, mascota_id=int(mascota_id))
+        nueva_cita = Cita(fecha=fecha, motivo=motivo, mascota_id=mascota_id)
         db.session.add(nueva_cita)
         db.session.commit()
 
-        return redirect(url_for('listar_citas'))
+        return redirect('/citas')
 
-    # Ruta para listar citas
     @app.route('/citas')
     @login_required
-    def listar_citas():
-        search = request.args.get('search', '', type=str)
-        page = request.args.get('page', 1, type=int)
+    def citas():
+        citas = Cita.query.join(Mascota).all()  # Asegúrate de que las relaciones estén cargadas
+        mascotas = Mascota.query.all()
+        return render_template('citas.html', citas=citas, mascotas=mascotas)
 
-        if search:
-            citas = Cita.query.filter(
-                Cita.motivo.ilike(f'%{search}%')
-            ).paginate(page=page, per_page=5)
-        else:
-            citas = Cita.query.paginate(page=page, per_page=5)
-
-        mascotas = Mascota.query.all()  # Para el formulario de agregar cita
-        return render_template('citas.html', citas=citas, mascotas=mascotas, search=search)
-
-    # Agregar rutas para el inventario
+    # -------------------------------
+    # Rutas para Inventario
+    # -------------------------------
     @app.route('/inventario')
     @login_required
     def listar_inventario():
-        search = request.args.get('search', '', type=str)
-        page = request.args.get('page', 1, type=int)
-
-        if search:
-            productos = Producto.query.filter(
-                Producto.nombre.ilike(f'%{search}%')
-            ).paginate(page=page, per_page=5)
-        else:
-            productos = Producto.query.paginate(page=page, per_page=5)
-
-        return render_template('inventario.html', productos=productos, search=search)
+        productos = Producto.query.all()
+        return render_template('inventario.html', productos=productos)
 
     @app.route('/agregar_producto', methods=['POST'])
+    @login_required
     def agregar_producto():
         nombre = request.form['nombre']
         cantidad = request.form['cantidad']
@@ -126,9 +96,14 @@ def configurar_rutas(app):
 
         return redirect(url_for('listar_inventario'))
 
-    # Ruta para registrar usuarios
+    # -------------------------------
+    # Rutas para Usuarios
+    # -------------------------------
     @app.route('/register', methods=['GET', 'POST'])
     def register():
+        if current_user.is_authenticated:
+            return redirect(url_for('home'))  # Redirigir al home si ya está autenticado
+
         if request.method == 'POST':
             username = request.form['username']
             email = request.form['email']
@@ -148,9 +123,11 @@ def configurar_rutas(app):
 
         return render_template('register.html')
 
-    # Ruta para iniciar sesión
     @app.route('/login', methods=['GET', 'POST'])
     def login():
+        if current_user.is_authenticated:
+            return redirect(url_for('home'))  # Redirigir al home si ya está autenticado
+
         if request.method == 'POST':
             email = request.form['email']
             password = request.form['password']
@@ -159,17 +136,61 @@ def configurar_rutas(app):
             if usuario and usuario.check_password(password):
                 login_user(usuario)
                 flash('Inicio de sesión exitoso.')
-                next_page = request.args.get('next')  # Redirige a la página solicitada o al index
-                return redirect(next_page or url_for('home'))
+                return redirect(url_for('home'))
             else:
                 flash('Correo o contraseña incorrectos.')
 
         return render_template('login.html')
 
-    # Ruta para cerrar sesión
     @app.route('/logout')
     @login_required
     def logout():
         logout_user()
         flash('Has cerrado sesión.')
         return redirect(url_for('login'))
+
+    @app.route('/productos')
+    @login_required
+    def listar_productos():
+        productos = Producto.query.all()
+        return render_template("productos.html", productos=productos)
+
+    @app.route('/ventas')
+    @login_required
+    def listar_ventas():
+        ventas = db.session.execute(
+            """
+            SELECT v.id, c.nombre AS cliente, p.nombre AS producto, v.cantidad, 
+                   v.total, v.fecha 
+            FROM ventas v
+            JOIN clientes c ON v.cliente_id = c.id
+            JOIN productos p ON v.producto_id = p.id
+            """
+        ).fetchall()
+        return render_template('ventas.html', ventas=ventas)
+
+    @app.route('/agregar_venta', methods=['POST'])
+    @login_required
+    def agregar_venta():
+        cliente_id = request.form['cliente_id']
+        producto_id = request.form['producto_id']
+        cantidad = int(request.form['cantidad'])
+
+        # Obtener el precio del producto
+        producto = Producto.query.get(producto_id)
+        if not producto or producto.cantidad < cantidad:
+            flash('No hay suficiente stock del producto.')
+            return redirect(url_for('listar_ventas'))
+
+        total = producto.precio * cantidad
+
+        # Crear la nueva venta
+        nueva_venta = Venta(cliente_id=cliente_id, producto_id=producto_id, cantidad=cantidad, total=total, fecha=datetime.now())
+        db.session.add(nueva_venta)
+
+        # Actualizar el stock del producto
+        producto.cantidad -= cantidad
+        db.session.commit()
+
+        flash('Venta registrada con éxito.')
+        return redirect(url_for('listar_ventas'))

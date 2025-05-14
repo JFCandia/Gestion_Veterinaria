@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Producto{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Editar Producto</h1>
+    <form action="/editar_producto/{{ producto.id }}" method="POST" class="form-container">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" value="{{ producto.nombre }}" required>
+        
+        <label for="precio">Precio:</label>
+        <input type="number" step="0.01" id="precio" name="precio" value="{{ producto.precio }}" required>
+        
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" value="{{ producto.cantidad }}" required>
+        
+        <button type="submit" class="btn-submit">Guardar Cambios</button>
+    </form>
+</div>
+{% endblock %}

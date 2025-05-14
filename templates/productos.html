@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Productos{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Gestión de Productos</h1>
+    <p>Aquí puedes agregar, editar y eliminar productos del inventario.</p>
+    
+    <!-- Tabla para mostrar los productos -->
+    <table class="styled-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.id }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.precio }}</td>
+                <td>{{ producto.cantidad }}</td>
+                <td>
+                    <a href="/editar_producto/{{ producto.id }}" class="btn-edit">Editar</a>
+                    <a href="/eliminar_producto/{{ producto.id }}" class="btn-delete">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Formulario para agregar un nuevo producto -->
+    <h2>Agregar Nuevo Producto</h2>
+    <form action="/agregar_producto" method="POST" class="form-container">
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" required>
+        
+        <label for="precio">Precio:</label>
+        <input type="number" step="0.01" id="precio" name="precio" required>
+        
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" name="cantidad" required>
+        
+        <button type="submit" class="btn-submit">Agregar Producto</button>
+    </form>
+</div>
+{% endblock %}

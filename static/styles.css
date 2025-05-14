@@ -1,66 +1,88 @@
-/* Estilo general */
+/* General */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
+    background-color: #F1F8FF; /* Azul muy claro */
+    color: #212529; /* Gris oscuro para el texto */
     margin: 0;
     padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
 }
 
-/* Encabezado */
+/* Contenedor principal */
+.container {
+    max-width: 1000px; /* Aumenta el ancho máximo */
+    margin: 20px auto;
+    padding: 30px; /* Aumenta el relleno interno */
+    background: #FFFFFF; /* Fondo blanco para el contenedor */
+    border-radius: 12px; /* Bordes más redondeados */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    min-height: calc(100vh - 120px); /* Altura mínima para ocupar toda la pantalla menos el header y footer */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra verticalmente */
+}
+
+/* Header */
 header {
-    background-color: #4CAF50;
-    padding: 1rem;
+    background-color: #E3F2FD; /* Azul claro */
+    padding: 1rem; /* Espaciado interno */
     text-align: center;
-    color: white;
+    color: #007BFF; /* Azul profesional para el texto */
+    width: 100%;
+    position: fixed; /* Fija el menú en la parte superior */
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Asegura que el menú esté por encima del contenido */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para destacar el menú */
+    font-size: 1rem; /* Tamaño de fuente */
 }
 
+/* Navegación */
 header nav ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
     display: flex;
     justify-content: center;
+    gap: 2rem; /* Espacio entre los elementos del menú */
 }
 
 header nav ul li {
-    margin: 0 1rem;
+    margin: 0;
 }
 
 header nav ul li a {
     text-decoration: none;
-    color: white;
+    color: #007BFF; /* Azul profesional */
     font-weight: bold;
+    padding: 0.5rem 1.5rem; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 1rem; /* Tamaño de fuente */
 }
 
 header nav ul li a:hover {
-    text-decoration: underline;
+    background-color: #BBDEFB; /* Azul claro para hover */
+    transform: scale(1.1); /* Efecto de agrandamiento */
+}
+
+header nav ul li a.active {
+    background-color: #90CAF9; /* Azul más claro para el enlace activo */
+    pointer-events: none; /* Desactiva el enlace activo */
+}
+
+/* Títulos */
+h1, h2 {
+    color: #1565C0; /* Azul más oscuro para los títulos */
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 2rem; /* Aumenta el tamaño de los títulos */
 }
 
 /* Menú principal en index.html */
 .menu {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    background-color: #4CAF50;
-}
-
-.menu li {
-    margin: 0;
-    padding: 0;
-}
-
-.menu li a {
-    display: block;
-    padding: 1rem 1.5rem;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.menu li a:hover {
-    background-color: #45a049;
+    margin: 2rem auto;
+    text-align: center;
 }
 
 .menu-grid {
@@ -69,13 +91,13 @@ header nav ul li a:hover {
     gap: 1.5rem;
     padding: 0;
     margin: 0 auto;
-    max-width: 800px;
+    max-width: 900px;
 }
 
 .menu-item {
     display: block;
     padding: 1rem;
-    background-color: #4CAF50;
+    background-color: #007BFF;
     color: white;
     text-decoration: none;
     border-radius: 8px;
@@ -96,30 +118,46 @@ header nav ul li a:hover {
 .menu-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    background-color: #45a049;
+    background-color: #0056B3;
 }
 
 /* Contenido principal */
 main {
     padding: 2rem;
+    margin-top: 80px; /* Asegura que el contenido no quede debajo del menú */
 }
 
 /* Tablas */
-table {
+.styled-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1rem 0;
-}
-
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 0.5rem;
+    margin: 20px 0;
+    font-size: 1rem;
     text-align: left;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-table th {
-    background-color: #4CAF50;
-    color: white;
+.styled-table thead tr {
+    background-color: #007BFF;
+    color: #FFFFFF;
+    text-align: left;
+    font-weight: bold;
+}
+
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #E0E0E0;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #F8F9FA;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #D9E9FF;
 }
 
 /* Formularios */
@@ -130,91 +168,140 @@ form {
 form label {
     display: block;
     margin: 0.5rem 0 0.2rem;
+    font-weight: bold;
+    color: #1565C0; /* Azul oscuro */
 }
 
-form input, form button {
-    padding: 0.5rem;
+form input, form select, form button {
+    padding: 10px;
     margin-bottom: 1rem;
     width: 100%;
-    max-width: 300px;
-}
-
-form button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-form button:hover {
-    background-color: #45a049;
-}
-
-.pagination {
-    margin: 1rem 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-}
-
-.pagination a {
-    text-decoration: none;
-    color: #4CAF50;
-    font-weight: bold;
-}
-
-.pagination a:hover {
-    text-decoration: underline;
-}
-
-.pagination span {
-    font-weight: bold;
-    color: #333;
-}
-
-/* Contenedor principal */
-.gestion-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    padding: 2rem;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Elementos individuales */
-.gestion-item {
-    background-color: #4CAF50;
-    color: white;
-    padding: 1.5rem;
-    border-radius: 8px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Enlaces dentro de los elementos */
-.gestion-item a {
-    text-decoration: none;
-    color: white;
-}
-
-/* Títulos */
-.gestion-item h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
-}
-
-/* Descripciones */
-.gestion-item p {
-    margin: 0.5rem 0 0;
+    max-width: 400px; /* Aumenta el ancho máximo */
+    border: 1px solid #BBDEFB; /* Azul claro para los bordes */
+    border-radius: 8px; /* Bordes más redondeados */
     font-size: 1rem;
 }
 
-/* Efecto hover */
-.gestion-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+form input:focus, form select:focus {
+    border-color: #64B5F6; /* Azul más intenso para el enfoque */
+    outline: none;
+    box-shadow: 0 0 5px rgba(100, 181, 246, 0.5); /* Efecto de enfoque */
 }
+
+form button {
+    background-color: #64B5F6; /* Azul claro */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover {
+    background-color: #42A5F5; /* Azul más intenso para hover */
+    transform: scale(1.05);
+}
+
+/* Formulario */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+label {
+    font-weight: bold;
+    color: #333333;
+}
+
+input, select, button {
+    padding: 10px;
+    border: 1px solid #DEE2E6;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+}
+
+input:focus, select:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Agrega un efecto de enfoque */
+}
+
+button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056B3;
+    transform: scale(1.05);
+}
+
+/* Campo de búsqueda */
+.search-bar {
+    max-width: 300px; /* Reduce el ancho máximo */
+    padding: 8px; /* Reduce el relleno interno */
+    font-size: 0.9rem; /* Reduce el tamaño de fuente */
+}
+
+/* Contenedor de búsqueda */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el campo de búsqueda y el botón */
+    margin-bottom: 15px; /* Reduce el margen inferior */
+    justify-content: center;
+}
+
+/* Botón de búsqueda */
+.btn-search {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-search:hover {
+    background-color: #0056B3;
+    transform: scale(1.05);
+}
+
+/* Botones de acción */
+.btn-edit {
+    background-color: #FFC107; /* Amarillo */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-edit:hover {
+    background-color: #E0A800;
+}
+
+.btn-delete {
+    background-color: #DC3545; /* Rojo */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-delete:hover {
+    background-color: #C82333;
+}
+
+
+
